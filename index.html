@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI작업</title>
+<meta name="description" content="자주 쓰는 AI 앱과 개발 도구 바로가기">
+<meta name="theme-color" content="#f5f6fa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0e14" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AI작업">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232563eb'/%3E%3Ctext x='50' y='68' font-size='52' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3EAI%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#f5f6fa;
+    --surface:#ffffff;
+    --surface-2:#eceef4;
+    --text:#111827;
+    --muted:#6b7280;
+    --line:#e5e7eb;
+    --shadow:0 1px 2px rgba(16,24,40,.06), 0 8px 24px -12px rgba(16,24,40,.18);
+    --shadow-press:0 1px 2px rgba(16,24,40,.08);
+    --radius:20px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0b0e14;
+      --surface:#151a23;
+      --surface-2:#1d2431;
+      --text:#e8ecf3;
+      --muted:#93a0b4;
+      --line:#242c3a;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.8);
+      --shadow-press:0 1px 2px rgba(0,0,0,.5);
+    }
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic",
+      "Noto Sans KR", "Segoe UI", Roboto, sans-serif;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    padding-bottom:calc(28px + env(safe-area-inset-bottom));
+  }
+  .wrap{
+    max-width:640px;
+    margin:0 auto;
+    padding:calc(20px + env(safe-area-inset-top)) 16px 0;
+  }
+
+  /* ── header ── */
+  header{padding:8px 2px 4px}
+  h1{
+    font-size:30px;
+    line-height:1.15;
+    letter-spacing:-.02em;
+    margin:0;
+    font-weight:800;
+  }
+  h1 .dot{color:#2563eb}
+  .sub{
+    margin:6px 0 0;
+    font-size:13.5px;
+    color:var(--muted);
+  }
+  .search{
+    position:relative;
+    margin:16px 0 4px;
+  }
+  .search svg{
+    position:absolute;
+    left:14px; top:50%;
+    transform:translateY(-50%);
+    width:18px; height:18px;
+    stroke:var(--muted); fill:none; stroke-width:2;
+    pointer-events:none;
+  }
+  #q{
+    width:100%;
+    height:46px;
+    padding:0 40px 0 40px;
+    font-size:16px;            /* iOS 확대 방지 */
+    font-family:inherit;
+    color:var(--text);
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    outline:none;
+    -webkit-appearance:none;
+    appearance:none;
+  }
+  #q::-webkit-search-cancel-button,
+  #q::-webkit-search-decoration{-webkit-appearance:none;display:none}
+  #q::placeholder{color:var(--muted)}
+  #q:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+  #clear{
+    position:absolute;
+    right:6px; top:50%;
+    transform:translateY(-50%);
+    width:34px; height:34px;
+    display:none;
+    align-items:center; justify-content:center;
+    border:0; border-radius:50%;
+    background:var(--surface-2);
+    color:var(--muted);
+    font-size:16px; line-height:1;
+    cursor:pointer;
+  }
+  #clear.show{display:flex}
+
+  /* ── sections ── */
+  section{margin-top:26px}
+  h2{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:0 0 12px 2px;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.02em;
+    color:var(--muted);
+    text-transform:uppercase;
+  }
+  h2 .n{
+    font-size:11px;
+    font-weight:700;
+    color:var(--muted);
+    background:var(--surface-2);
+    border-radius:99px;
+    padding:2px 7px;
+    letter-spacing:0;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0,1fr));
+    gap:12px;
+  }
+  @media (min-width:520px){
+    .grid{grid-template-columns:repeat(3, minmax(0,1fr))}
+  }
+
+  /* ── card ── */
+  .card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    min-height:132px;
+    padding:16px 15px 14px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    text-decoration:none;
+    color:inherit;
+    transition:transform .12s ease, box-shadow .12s ease;
+    will-change:transform;
+  }
+  .card:active{
+    transform:scale(.965);
+    box-shadow:var(--shadow-press);
+  }
+  @media (hover:hover){
+    .card:hover{border-color:rgba(37,99,235,.35)}
+  }
+  .card:focus-visible{
+    outline:3px solid #2563eb;
+    outline-offset:2px;
+  }
+  .icon{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:52px; height:52px;
+    border-radius:15px;
+    font-size:26px;
+    line-height:1;
+    color:#fff;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.28), 0 6px 14px -8px rgba(16,24,40,.6);
+  }
+  .name{
+    font-size:15px;
+    line-height:1.3;
+    font-weight:700;
+    letter-spacing:-.01em;
+    word-break:keep-all;
+  }
+  .desc{
+    margin-top:-4px;
+    font-size:12px;
+    color:var(--muted);
+    word-break:keep-all;
+  }
+  .go{
+    position:absolute;
+    top:16px; right:14px;
+    font-size:12px;
+    color:var(--muted);
+    opacity:.75;
+  }
+
+  .empty{
+    display:none;
+    padding:34px 8px;
+    text-align:center;
+    font-size:14px;
+    color:var(--muted);
+  }
+  .empty.show{display:block}
+
+  footer{
+    margin:30px 0 0;
+    padding-top:16px;
+    border-top:1px solid var(--line);
+    font-size:11.5px;
+    color:var(--muted);
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  footer b{font-weight:600;color:var(--text);opacity:.75}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>AI작업<span class="dot">.</span></h1>
+    <p class="sub">자주 쓰는 앱과 도구를 한 번에</p>
+    <div class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5" stroke-linecap="round"/></svg>
+      <input id="q" type="search" inputmode="search" autocomplete="off" placeholder="이름으로 찾기 (예: 매출)" aria-label="앱 이름 검색">
+      <button id="clear" type="button" aria-label="검색어 지우기">×</button>
+    </div>
+  </header>
+
+  <main>
+    <section aria-labelledby="s-apps">
+      <h2 id="s-apps">내 앱 <span class="n" id="n-apps">7</span></h2>
+      <div class="grid" id="grid-apps">
+
+        <a class="card" href="https://dental-safety-guideline.vercel.app" target="_blank" rel="noopener" data-k="전신질환 정보 분석 치과 전신질환 복용약 hira dental safety">
+          <span class="icon" style="background:linear-gradient(145deg,#2f7cf6,#1a4fc4)">🦷</span>
+          <span class="name">전신질환 정보 분석</span>
+          <span class="desc">치과 진료 전 전신질환·복용약 확인</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="card" href="https://univconsulting.vercel.app" target="_blank" rel="noopener" data-k="정시컨설팅 대입 정시 상담 컨설팅 univ consulting">
+          <span class="icon" style="background:linear-gradient(145deg,#7c5cff,#4f2fd0)">🎓</span>
+          <span class="name">정시컨설팅</span>
+          <span class="desc">대입 정시 상담·지원 분석</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="card" href="https://watercolor-sketch-peyzzz.vercel.app" target="_blank" rel="noopener" data-k="펜 담체화 풍경스케치 교재 펜드로잉 수채 스케치 watercolor sketch">
+          <span class="icon" style="background:linear-gradient(145deg,#f0a03c,#d1651b)">🖌️</span>
+          <span class="name">펜 담체화 풍경스케치 교재</span>
+          <span class="desc">온라인 AI 드로잉 교재</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="card" href="https://surgical-risk-tool.vercel.app" target="_blank" rel="noopener" data-k="Surgical Risk Tool 수술 위험도 평가 surgical risk">
+          <span class="icon" style="background:linear-gradient(145deg,#2bb673,#0e8a52)">🩺</span>
+          <span class="name">Surgical Risk Tool</span>
+          <span class="desc">수술 전 위험도 평가</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="card" href="https://mediscope-coral.vercel.app" target="_blank" rel="noopener" data-k="치과 개원 시뮬레이터 개원 비용 수익 mediscope">
+          <span class="icon" style="background:linear-gradient(145deg,#3fb6d8,#147e9e)">🏥</span>
+          <span class="name">치과 개원 시뮬레이터</span>
+          <span class="desc">개원 비용·수익 시뮬레이션</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="card" href="https://hospital-revenue.vercel.app" target="_blank" rel="noopener" data-k="병원 매출분석 매출 병원 분석 hospital revenue">
+          <span class="icon" style="background:linear-gradient(145deg,#e8564f,#b3261e)">📈</span>
+          <span class="name">병원 매출분석</span>
+          <span class="desc">병원 매출 데이터 분석</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="card" href="https://retirement-calc-one.vercel.app" target="_blank" rel="noopener" data-k="은퇴 계산기 은퇴자금 연금 retirement calc">
+          <span class="icon" style="background:linear-gradient(145deg,#5a6478,#333b4c)">🧮</span>
+          <span class="name">은퇴 계산기</span>
+          <span class="desc">은퇴 자금·생활비 계산</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+      </div>
+    </section>
+
+    <section aria-labelledby="s-tools">
+      <h2 id="s-tools">AI 도구 <span class="n" id="n-tools">5</span></h2>
+      <div class="grid" id="grid-tools">
+
+        <a class="card" href="https://chatgpt.com" target="_blank" rel="noopener" data-k="ChatGPT 챗지피티 gpt openai">
+          <span class="icon" style="background:linear-gradient(145deg,#19c37d,#0a8f5b)">💬</span>
+          <span class="name">ChatGPT</span>
+          <span class="desc">대화형 AI</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="card" href="https://claude.ai" target="_blank" rel="noopener" data-k="Claude 클로드 anthropic">
+          <span class="icon" style="background:linear-gradient(145deg,#d97757,#b0502f)">🧠</span>
+          <span class="name">Claude</span>
+          <span class="desc">대화형 AI · Anthropic</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="card" href="https://gemini.google.com" target="_blank" rel="noopener" data-k="Gemini 제미나이 구글 google">
+          <span class="icon" style="background:linear-gradient(145deg,#4285f4,#8b5cf6)">✨</span>
+          <span class="name">Gemini</span>
+          <span class="desc">Google AI</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="card" href="https://github.com/km-investech" target="_blank" rel="noopener" data-k="GitHub 깃허브 코드 저장소 km-investech">
+          <span class="icon" style="background:linear-gradient(145deg,#3a4252,#14181f)">🐙</span>
+          <span class="name">GitHub</span>
+          <span class="desc">@km-investech 저장소</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="card" href="https://vercel.com" target="_blank" rel="noopener" data-k="Vercel 버셀 배포 호스팅">
+          <span class="icon" style="background:linear-gradient(145deg,#57606f,#22262e)">▲</span>
+          <span class="name">Vercel</span>
+          <span class="desc">앱 배포·호스팅</span>
+          <span class="go" aria-hidden="true">↗</span>
+        </a>
+
+      </div>
+    </section>
+
+    <p class="empty" id="empty">찾는 앱이 없습니다.</p>
+  </main>
+
+  <footer>
+    <span><b>AI작업</b> · 바로가기 모음</span>
+    <span>@km-investech</span>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var q = document.getElementById('q');
+  var clear = document.getElementById('clear');
+  var empty = document.getElementById('empty');
+  var gridApps = document.getElementById('grid-apps');
+  var gridTools = document.getElementById('grid-tools');
+  var nApps = document.getElementById('n-apps');
+  var nTools = document.getElementById('n-tools');
+  var secApps = gridApps.parentNode;
+  var secTools = gridTools.parentNode;
+  var cards = [].slice.call(document.querySelectorAll('.card'));
+
+  function apply(){
+    var term = q.value.trim().toLowerCase();
+    var shownApps = 0, shownTools = 0;
+    cards.forEach(function(c){
+      var hay = (c.getAttribute('data-k') + ' ' + c.textContent).toLowerCase();
+      var ok = !term || hay.indexOf(term) !== -1;
+      c.style.display = ok ? '' : 'none';
+      if(ok){
+        if(gridApps.contains(c)) shownApps++;
+        if(gridTools.contains(c)) shownTools++;
+      }
+    });
+    nApps.textContent = shownApps;
+    nTools.textContent = shownTools;
+    secApps.style.display = shownApps ? '' : 'none';
+    secTools.style.display = shownTools ? '' : 'none';
+    empty.classList.toggle('show', shownApps + shownTools === 0);
+    clear.classList.toggle('show', q.value.length > 0);
+  }
+
+  q.addEventListener('input', apply);
+  q.addEventListener('search', apply);
+  clear.addEventListener('click', function(){
+    q.value = '';
+    q.focus();
+    apply();
+  });
+  apply();
+})();
+</script>
+</body>
+</html>
